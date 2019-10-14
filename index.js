@@ -1,5 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose')
+
+const User = require('./models/userModels')
+
 const app = express()
 const port = 2019
 const URL = 'mongodb://localhost:27017/bdg-mongoose'
@@ -16,6 +19,19 @@ mongoose.connect(URL, {
 })
 
 app.use(express.json())
+
+// Create one User
+app.post('/users',(req,res) => {
+
+    const user = new User(req.body)
+     user.save()
+        .then(()=> res.send('Data Berhasil Di Simpan'))
+        .catch((err) => {res.send(err)})
+
+})
+
+
+
 
 
 
