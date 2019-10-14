@@ -30,9 +30,19 @@ app.post('/users',(req,res) => {
 
 })
 
+// reade One User
+app.get('/users/:userid', async (req,res)=> {
+
+
+   const resp = await User.findById(req.params.userid)
+   res.send(resp)
+})
 
 
 
+// ES 5 : callback
+// ES 6 : Promise -> catch then
+// ES 7 : Async Await
 
 
 app.listen(port, () => {console.log('Api Runing di port ' + port)})
