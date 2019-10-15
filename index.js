@@ -76,4 +76,17 @@ app.patch('/users/:userid', async (req,res)=> {
 // ES 7 : Async Await
 
 
+// Login 
+app.post('/users/login', async(req,res)=>{
+    try {
+        let result = await User.login(req.body.email, req.body.password)
+        res.send({
+                condition : "berhasil login ",
+                pesan : result
+            })
+    } catch (error) {
+        res.send(error.message)
+    }
+})
+
 app.listen(port, () => {console.log('Api Runing di port ' + port)})
