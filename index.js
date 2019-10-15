@@ -32,13 +32,44 @@ app.post('/users',(req,res) => {
 
 // reade One User
 app.get('/users/:userid', async (req,res)=> {
+    try{
+        const resp = await User.findById(req.params.userid)
+        res.send(resp)
+    }catch(e){
+        res.send(err)
+    }
+})
 
-
-   const resp = await User.findById(req.params.userid)
-   res.send(resp)
+// read All user
+app.get('/users', async (req,res)=> {
+    try{
+        const resp = await User.find({})
+        res.send(resp)
+    }catch(e){
+        res.send(err)
+    }
 })
 
 
+// Delete one by id
+app.delete('/users/:userid', async (req,res)=> {
+    try{
+        const resp = await User.deleteOne({_id : req.params.userid})
+        res.send(resp)
+    }catch(e){
+        res.send(err)
+    }
+})
+// update by id
+
+app.patch('/users/:userid', async (req,res)=> {
+    try{
+        const resp = await User.updateOne({_id : req.params.userid},{age:12})
+        res.send(resp)
+    }catch(e){
+        res.send(err)
+    }
+})
 
 // ES 5 : callback
 // ES 6 : Promise -> catch then

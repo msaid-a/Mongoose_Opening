@@ -1,9 +1,13 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
+const bcrypt = require('bcryptjs')
 
 const userSchema = new mongoose.Schema({
 
     username: {
         type : String,
+        unique : true,
+        required :true,
         set : (val) => { return val.replace(/ /g, '') },// val = data dari user, menghapus semua spasi
         validate(val){
             // 
@@ -28,6 +32,21 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
+    email : {
+        type : String,
+        unique : true,
+        required : true,
+        trim: true,
+        lowercase: true,
+        validate(val){
+            // validasi email atau bukan
+            // isEmail akan return antara true atau false
+            let result = validator.isEmail(val)
+            if(!result){
+                throw new Error("is not email")
+            }
+        }
+    },
     password : {
         type: String,
         required: true,
@@ -40,6 +59,18 @@ const userSchema = new mongoose.Schema({
         set: val => parseInt(val),
         default : 0 //jika user tidak menginput informasi   
     }
+})
+
+// membuat funtion yang akan di jalakan sebelum proses use.save
+userSchema.pre('save', async function(next){
+    // mengubah password yang di input dari user kedalam bentuk lain
+   let user = this
+
+    // Hash Password
+    user.password = await bcrypt.hash(user.password, 8)
+
+    // Untuk kemudian menjalankan save 
+    next()
 })
 
 const User = mongoose.model('User', userSchema)
