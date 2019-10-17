@@ -1,8 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const userRouter = require('./routers/userRouters')
+const taskRouter = require('./routers/taskRouter')
 
-const User = require('./models/userModels')
-const Task = require('./models/taskModels')
 
 const app = express()
 const port = 2019
@@ -20,96 +20,9 @@ mongoose.connect(URL, {
 })
 
 app.use(express.json())
+app.use(userRouter)
+app.use(taskRouter)
 
-// U S E R
-
-// Create one User
-app.post('/users',(req,res) => {
-
-    const user = new User(req.body)
-     user.save()
-        .then(()=> res.send('Data Berhasil Di Simpan'))
-        .catch((err) => {res.send(err)})
-
-})
-
-// reade One User
-app.get('/users/:userid', async (req,res)=> {
-    try{
-        const resp = await User.findById(req.params.userid)
-        res.send(resp)
-    }catch(e){
-        res.send(err)
-    }
-})
-
-// read All user
-app.get('/users', async (req,res)=> {
-    try{
-        const resp = await User.find({})
-        res.send(resp)
-    }catch(e){
-        res.send(err)
-    }
-})
-
-
-// Delete one by id
-app.delete('/users/:userid', async (req,res)=> {
-    try{
-        const resp = await User.deleteOne({_id : req.params.userid})
-        res.send(resp)
-    }catch(e){
-        res.send(err)
-    }
-})
-// update by id
-
-app.patch('/users/:userid', async (req,res)=> {
-    try{
-        const resp = await User.updateOne({_id : req.params.userid},{age:12})
-        res.send(resp)
-    }catch(e){
-        res.send(err)
-    }
-})
-
-// ES 5 : callback
-// ES 6 : Promise -> catch then
-// ES 7 : Async Await
-
-
-// Login 
-app.post('/users/login', async(req,res)=>{
-    try {
-        let result = await User.login(req.body.email, req.body.password)
-        res.send({
-                condition : "berhasil login ",
-                pesan : result
-            })
-    } catch (error) {
-        res.send(error.message)
-    }
-})
-
-
-// T A S K 
-// Create Task
-app.post('/tasks', async(req,res) => {
-    
-    try {
-        let task =  new Task (req.body) 
-        let resp = await task.save()
-        
-        res.send(resp)
-        
-    } catch (error) {
-        res.send(error.message)
-    }
-  
-})
-
-// Update
 
 
 

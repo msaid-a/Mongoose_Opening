@@ -52,13 +52,23 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim :true,
         minlength: 7, //minimal karakter
-        validate(val){}
+        validate(val){
+            if(val.toLowerCase().includes("password")){
+                throw new Error("Password tidak boleh mengandung kata 'password'")
+            }
+        }
     },
     age : {
         type: Number,
         set: val => parseInt(val),
         default : 0 //jika user tidak menginput informasi   
-    }
+    },
+    tasks : [{
+        type : mongoose.Types.ObjectId,
+        ref : 'Task'
+    }]
+},{
+    timestamps: true
 })
 
 // membuat funtion yang akan di jalakan sebelum proses use.save
